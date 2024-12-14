@@ -2,20 +2,13 @@ const Book = require("../models/BookModel");
 const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const createProduct = async (newProduct) => {
+  console.log(newProduct);
   return new Promise(async (res, rej) => {
     const { name, image, type, price, countInStock, rating, description } =
       newProduct;
 
     try {
-      const createBook = await Book.create({
-        name,
-        image,
-        type,
-        price,
-        countInStock,
-        rating,
-        description,
-      });
+      const createBook = await Book.create(newProduct);
       if (createBook) {
         res({ status: "OK", message: "SUCCESS", data: createBook });
       }
