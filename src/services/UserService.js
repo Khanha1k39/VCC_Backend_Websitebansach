@@ -21,11 +21,11 @@ const createUser = async (newUser) => {
     }
   });
 };
-const login = (user) => {
+const login = ({ email, password }) => {
   return new Promise(async (res, rej) => {
-    const { name, email, password, confirmPassword } = user;
     try {
       const user = await User.findOne({ email });
+
       const access_token = jwtService.generalAccessToken({
         id: user._id,
         isAdmin: user.isAdmin,
@@ -114,7 +114,7 @@ const refreshToken = (token) => {
       //     message: "The user is not defined",
       //   });
       // }
-      console.log(token);
+      console.log("cookie", req.cookie);
       res({ status: "OK", message: "Success", data: token });
     } catch (error) {
       rej(error);

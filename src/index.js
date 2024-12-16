@@ -9,9 +9,17 @@ const cors = require("cors");
 const userName = process.env.DB_USER_NAME;
 const password = process.env.DB_PW;
 const uri = `mongodb+srv://${userName}:${password}@cluster0.jmoxqb2.mongodb.net/vcc?retryWrites=true&w=majority&appName=Cluster0`;
+const cookieParser = require("cookie-parser");
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Domain của frontend
+    credentials: true,
+  })
+);
+app.options("*", cors()); // include before other routes
 
-app.use(cors());
 app.use(bodyParse.json());
+app.use(cookieParser());
 
 mongoose
   .connect(uri)

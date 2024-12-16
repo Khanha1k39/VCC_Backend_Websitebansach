@@ -12,10 +12,13 @@ const createUser = async (req, res) => {
 };
 const loginUser = async (req, res) => {
   try {
-    console.log(req.body);
-    const data = await UserService.login(req.body);
-    console.log(data);
-    return res.status(200).json(data);
+    console.log("is logging");
+    const response = await UserService.login(req.body);
+    const { refresh_token, ...newRespone } = response;
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+    });
+    return res.status(200).json(newRespone);
   } catch (error) {
     return res.status(404).json({ error });
   }
@@ -63,6 +66,7 @@ const getDetailUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const respone = await UserService.getDetailUser(userId);
+
     return res.status(200).json(respone);
   } catch (error) {
     return res.status(404).json({ error });
@@ -70,7 +74,8 @@ const getDetailUser = async (req, res) => {
 };
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers.token?.split(" ")[1];
+    const token = req.cookies?.refresh_token;
+    console.log("refresh token", token);
     if (!token) {
       return res.status(200).json({
         status: "Err",
@@ -83,7 +88,20 @@ const refreshToken = async (req, res) => {
     return res.status(404).json({ error });
   }
 };
+const logout = async (req, res) => {
+  try {
+    console.log("refer from logout ", req.cookies?.refresh_token);
+    res.clearCookie("refresh_token", {});
+    return res.status(200).json({
+      status: "OK",
+      message: "Logout successfully",
+    });
+  } catch (error) {
+    return res.status(404).json({ error });
+  }
+};
 module.exports = {
+  logout,
   createUser,
   loginUser,
   updateUser,
