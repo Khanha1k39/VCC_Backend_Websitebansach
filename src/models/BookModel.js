@@ -38,10 +38,7 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
+
     value: {
       type: Number,
       required: false,

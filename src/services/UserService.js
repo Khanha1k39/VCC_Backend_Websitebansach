@@ -3,7 +3,7 @@ const jwtService = require("./jwtService");
 const bcrypt = require("bcrypt");
 const createUser = async (newUser) => {
   return new Promise(async (res, rej) => {
-    const { name, email, password, confirmPassword } = newUser;
+    const { name, email, password, confirmPassword, isAdmin = false } = newUser;
 
     try {
       const hashedPassword = bcrypt.hashSync(password, 10);
@@ -11,6 +11,7 @@ const createUser = async (newUser) => {
         name,
         email,
         password: hashedPassword,
+        isAdmin,
       });
       console.log(createdUser);
       if (createUser) {
