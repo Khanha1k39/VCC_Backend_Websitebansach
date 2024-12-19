@@ -75,7 +75,7 @@ const updateUser = async (req, res) => {
     }
     const data = req.body;
     const respone = await UserService.updateUser(userId, data);
-    return res.status(200).json(data);
+    return res.status(200).json(respone);
   } catch (error) {
     return res.status(404).json({ error });
   }
@@ -90,7 +90,7 @@ const deleteUser = async (req, res) => {
       });
     }
     const respone = await UserService.deleteUser(userId);
-    return res.status(200).json(data);
+    return res.status(200).json(respone);
   } catch (error) {
     return res.status(404).json({ error });
   }
