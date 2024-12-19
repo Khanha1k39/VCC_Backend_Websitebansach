@@ -1,20 +1,25 @@
 const User = require("../models/UserModel");
 const jwtService = require("./jwtService");
 const bcrypt = require("bcrypt");
-const createUser = async (newUser) => {
+const createUser = async ({ email, password }) => {
   return new Promise(async (res, rej) => {
-    const { name, email, password, confirmPassword, isAdmin = false } = newUser;
-
     try {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res({
+          status: "ERR",
+          message: "Người dùng đã tồn tại với email này.",
+        });
+      }
+
       const hashedPassword = bcrypt.hashSync(password, 10);
+
       const createdUser = await User.create({
-        name,
         email,
         password: hashedPassword,
-        isAdmin,
       });
-      console.log(createdUser);
-      if (createUser) {
+
+      if (createdUser) {
         res({ status: "OK", message: "SUCCESS", data: createdUser });
       }
     } catch (error) {
@@ -22,10 +27,37 @@ const createUser = async (newUser) => {
     }
   });
 };
-const login = ({ email, password }) => {
+// const login = ({ email, password }) => {
+//   return new Promise(async (res, rej) => {
+//     try {
+//       const user = await User.findOne({ email });
+
+//       const access_token = jwtService.generalAccessToken({
+//         id: user._id,
+//         isAdmin: user.isAdmin,
+//       });
+//       const refresh_token = jwtService.generalRefreshToken({
+//         id: user._id,
+//         isAdmin: user.isAdmin,
+//       });
+//       res({ access_token, refresh_token });
+//     } catch (error) {
+//       rej(error);
+//     }
+//   });
+// };
+const login = async ({ email, password }) => {
   return new Promise(async (res, rej) => {
     try {
       const user = await User.findOne({ email });
+      if (!user) {
+        return rej({ message: "Người dùng không tồn tại", status: "ERR" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return rej({ message: "Mật khẩu không đúng", status: "ERR" });
+      }
 
       const access_token = jwtService.generalAccessToken({
         id: user._id,
@@ -35,9 +67,11 @@ const login = ({ email, password }) => {
         id: user._id,
         isAdmin: user.isAdmin,
       });
+
       res({ access_token, refresh_token });
     } catch (error) {
-      rej(error);
+      console.error("Lỗi trong quá trình đăng nhập:", error);
+      rej({ message: "Lỗi máy chủ", status: 500 });
     }
   });
 };
