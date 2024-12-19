@@ -27,25 +27,7 @@ const createUser = async ({ email, password }) => {
     }
   });
 };
-// const login = ({ email, password }) => {
-//   return new Promise(async (res, rej) => {
-//     try {
-//       const user = await User.findOne({ email });
 
-//       const access_token = jwtService.generalAccessToken({
-//         id: user._id,
-//         isAdmin: user.isAdmin,
-//       });
-//       const refresh_token = jwtService.generalRefreshToken({
-//         id: user._id,
-//         isAdmin: user.isAdmin,
-//       });
-//       res({ access_token, refresh_token });
-//     } catch (error) {
-//       rej(error);
-//     }
-//   });
-// };
 const login = async ({ email, password }) => {
   return new Promise(async (res, rej) => {
     try {
