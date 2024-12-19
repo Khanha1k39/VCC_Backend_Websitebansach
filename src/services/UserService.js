@@ -121,25 +121,8 @@ const getDetailUser = (userId) => {
     }
   });
 };
-const refreshToken = (token) => {
-  return new Promise(async (res, rej) => {
-    try {
-      // const user = await User.findById(userId);
-      // if (!user) {
-      //   res({
-      //     status: "OK",
-      //     message: "The user is not defined",
-      //   });
-      // }
-      console.log("cookie", req.cookie);
-      res({ status: "OK", message: "Success", data: token });
-    } catch (error) {
-      rej(error);
-    }
-  });
-};
+
 module.exports = {
-  refreshToken,
   createUser,
   login,
   updateUser,
