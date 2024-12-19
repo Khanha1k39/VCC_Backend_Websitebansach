@@ -2,6 +2,7 @@ const Book = require("../models/BookModel");
 const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const { sendEmailCreateOrder } = require("./EmailService");
+const Order = require("../models/OrderModel");
 const createOrder = async (newOrder) => {
   return new Promise(async (res, rej) => {
     try {
@@ -19,9 +20,25 @@ const createOrder = async (newOrder) => {
         })
       );
       const result = await Promise.all(checkStockPromises);
-      console.log(result);
+      const updates = orderItems.map((item) =>
+        Book.findOneAndUpdate(
+          { _id: item.product },
+          { $inc: { quantity_available: -item.amount } },
+          { new: true }
+        ).then((updatedProduct) => {
+          if (!updatedProduct) {
+            throw new Error(
+              `Sản phẩm ${item.name} không tồn tại hoặc không đủ số lượng trong kho.`
+            );
+          }
+          return updatedProduct;
+        })
+      );
 
-      res("ok");
+      await Promise.all(updates);
+      const createOrder = await Order.create(newOrder);
+      await sendEmailCreateOrder(createOrder);
+      res(createOrder);
     } catch (error) {
       rej(error);
     }

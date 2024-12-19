@@ -3,10 +3,10 @@ const orderSchema = new mongoose.Schema(
   {
     orderItems: [
       {
-        name: { type: String, required: True },
-        amount: { type: Number, required: True },
-        image: { type: String, required: True },
-        price: { type: Number, required: True },
+        name: { type: String, required: true },
+        amount: { type: Number, required: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true },
         product: {
           type: mongoose.Schema.ObjectId,
           ref: "Product",
@@ -15,23 +15,22 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     shippingAddress: {
-      fullname: { type: String, required: True },
-      address: { type: String, required: True },
-      email: { type: String, required: True },
-      phone: { type: String, required: True },
+      fullname: { type: String, required: true },
+      address: { type: String, required: true },
+      email: { type: String, required: true },
+      phone: { type: String, required: true },
     },
-    paymentMethod: { type: String, required: True },
-    itemsPrice: { type: Number, required: True, unique: True },
-    shippingPrice: { type: Number, required: True },
-    taxPrice: { type: Number, default: false, required: True },
-    totalPrice: { type: Number, required: True },
-    user: { type: mongoose.Schema.ObjectId, ref: "Product" },
+    paymentMethod: { type: String },
+    itemsPrice: { type: Number },
+    shippingPrice: { type: Number },
+    taxPrice: { type: Number, default: false },
+    totalPrice: { type: Number },
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
-    isDelevery: { type: Boolean, default: False },
+    isDelevery: { type: Boolean, default: false },
     deliveryAt: { type: Date },
   },
   { timestamps: true }
 );
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+const Order = mongoose.model("Order", orderSchema);
+module.exports = Order;
