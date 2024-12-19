@@ -81,7 +81,7 @@ const sendEmailCreateOrder = async (order) => {
   });
   const info = await transporter.sendMail({
     from: '"Khanhbansach" <duongkhanhb1k39@gmail.com>',
-    to: "bskqqqqq@gmail.com", // người nhận email (khách hàng)
+    to: shippingAddress.email, // người nhận email (khách hàng)
     subject: "Xác nhận đơn hàng thành công", // Tiêu đề email
     html: htmlContent, // Nội dung email dạng HTML
   });
