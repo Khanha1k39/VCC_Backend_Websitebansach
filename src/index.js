@@ -12,11 +12,11 @@ const uri = `mongodb+srv://${userName}:${password}@cluster0.jmoxqb2.mongodb.net/
 const cookieParser = require("cookie-parser");
 app.use(
   cors({
-    origin: "http://localhost:5173", // Domain của frontend
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
-app.options("*", cors()); // include before other routes
+app.options("*", cors());
 
 app.use(bodyParse.json());
 app.use(cookieParser());
@@ -29,6 +29,8 @@ mongoose
   .catch(() => {
     console.log("faile to conect db");
   });
+const { initRedis } = require("./dbs/redis");
+initRedis();
 
 app.listen(port, () => {
   console.log(`lisening on ${port}`);

@@ -77,6 +77,8 @@ const getAllProduct = async (req, res) => {
       Number(limit) || 8,
       Number(page) || 1
     );
+    // console.log("is getall product ",respone);
+
     return res.status(200).json(respone);
   } catch (error) {
     return res.status(404).json({ error });
