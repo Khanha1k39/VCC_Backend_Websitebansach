@@ -1,4 +1,7 @@
+const statusCodes = require("../core/statusCodes");
+const Response = require("../core/success.response");
 const ProductService = require("../services/ProductService");
+const { default: ApiError } = require("../utils/ApiError");
 const createProduct = async (req, res) => {
   try {
     const { title, image, type, price, countInStock, rating, description } =
@@ -69,20 +72,19 @@ const deleteManyProduct = async (req, res) => {
     return res.status(404).json({ error });
   }
 };
-const getAllProduct = async (req, res) => {
-  try {
-    console.log("is getall product");
-    const { limit, page, sort } = req.query;
-    const respone = await ProductService.getAllProduct(
-      Number(limit) || 8,
-      Number(page) || 1
-    );
-    // console.log("is getall product ",respone);
+const getAllProduct = async (req, res, next) => {
+  console.log("is getall product");
+  const { limit, page, sort } = req.query;
+  throw new ApiError(statusCodes.NOT_FOUND, "User expried");
 
-    return res.status(200).json(respone);
-  } catch (error) {
-    return res.status(404).json({ error });
-  }
+  const respone = await ProductService.getAllProduct(
+    Number(limit) || 8,
+    Number(page) || 1
+  );
+  new Response({
+    message: "Get all successfully",
+    metadata: respone,
+  }).send(res);
 };
 
 module.exports = {

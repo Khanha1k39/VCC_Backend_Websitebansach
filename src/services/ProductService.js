@@ -1,6 +1,8 @@
 const Book = require("../models/BookModel");
 const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
+const { default: ApiError } = require("../utils/ApiError");
+const statusCodes = require("../core/statusCodes");
 const createProduct = async (newProduct) => {
   console.log(newProduct);
   return new Promise(async (res, rej) => {
@@ -82,26 +84,18 @@ const deleteManyProduct = (ids) => {
     }
   });
 };
-const getAllProduct = (limit = 8, page = 1, sort) => {
-  return new Promise(async (res, rej) => {
-    try {
-      const totalBook = await Book.countDocuments();
-      const allBook = await Book.find()
-        .limit(limit)
-        .skip((page - 1) * limit);
-      res({
-        status: "ok",
-        message: "Success",
-        data: allBook,
-        totalBook: totalBook,
-        pageCurrent: page,
-        totalPage: Math.ceil(totalBook / limit),
-      });
-    } catch (error) {
-      console.log(error);
-      rej(error);
-    }
-  });
+const getAllProduct = async (limit = 8, page = 1, sort) => {
+  const totalBook = await Book.countDocuments();
+  const allBook = await Book.find()
+    .limit(limit)
+    .skip((page - 1) * limit);
+  throw new ApiError(statusCodes.BAD_REQUEST);
+  return {
+    data: allBook,
+    totalBook: totalBook,
+    pageCurrent: page,
+    totalPage: Math.ceil(totalBook / limit),
+  };
 };
 
 module.exports = {

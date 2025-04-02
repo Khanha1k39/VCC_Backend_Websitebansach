@@ -1,7 +1,7 @@
-import { WHITELIST_DOMAINS } from "~/utils/constants";
-import { env } from "~/config/environment";
+import { WHITELIST_DOMAINS } from "../utils/constants.js";
+import { env } from "./enviroment.js";
 import { StatusCodes } from "http-status-codes";
-import ApiError from "~/utils/ApiError";
+import ApiError from "../utils/ApiError.js";
 
 export const corsOptions = {
   origin: function (origin, callback) {
