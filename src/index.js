@@ -26,14 +26,44 @@ mongoose
   .catch(() => {
     console.log("faile to conect db");
   });
-// initRedis();
-
+const redisClient = require("./dbs/redis");
+redisClient.connect().catch((err) => console.log(err));
 app.listen(port, () => {
   console.log(`lisening on ${port}`);
 });
 
+const sendOrderToKafka = async (orderDetails) => {
+  try {
+    await producer.connect();
+    await producer.send({
+      topic: "order-topic",
+      messages: [{ value: JSON.stringify(orderDetails) }],
+    });
+    console.log("Order sent to Kafka");
+  } catch (err) {
+    console.error("Error sending order to Kafka:", err);
+  }
+};
+
+// API nhận đơn hàng và gửi tới Kafka
+app.post("/order", async (req, res) => {
+  const orderDetails = req.body;
+  await sendOrderToKafka(orderDetails);
+  res.send("Order placed, email will be sent shortly");
+});
+
 routes(app);
-app.use(errorHandlingMiddleware);
+// app.use(errorHandlingMiddleware);
+app.use((error, req, res, next) => {
+  console.log(error);
+  const statusCode = error.status || 500;
+
+  return res.status(statusCode).json({
+    status: "error",
+    code: statusCode,
+    message: error.message || "Internal Server Error",
+  });
+});
 
 // app.use((error, req, res, next) => {
 //   console.log(error);

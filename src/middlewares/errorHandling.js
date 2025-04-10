@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { env } from "../config/enviroment.js";
 
 export const errorHandlingMiddleware = (err, req, res, next) => {
+  console.log(err);
   if (!err.statusCode) err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
   const responseError = {
     statusCode: err.statusCode,

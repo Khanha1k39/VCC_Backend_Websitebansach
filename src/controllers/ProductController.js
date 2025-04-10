@@ -1,3 +1,5 @@
+const { BadRequestError, ErrorResponse } = require("../core/error.response");
+const httpStatusCode = require("../core/httpStatusCode");
 const statusCodes = require("../core/statusCodes");
 const Response = require("../core/success.response");
 const ProductService = require("../services/ProductService");
@@ -26,20 +28,20 @@ const updateProduct = async (req, res) => {
   }
 };
 const getDetailProduct = async (req, res) => {
-  try {
-    const bookId = req.params.id;
-    if (!bookId) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "The productId is required",
-      });
-    }
-    const respone = await ProductService.getDetailProduct(bookId);
-    return res.status(200).json(respone);
-  } catch (error) {
-    return res.status(404).json({ error });
+  const bookId = req.params.id;
+  if (!bookId) {
+    throw new ErrorResponse(
+      "Id missing",
+      httpStatusCode.StatusCodes.BAD_REQUEST
+    );
   }
+
+  new Response({
+    message: "Get product detail success",
+    metadata: await ProductService.getDetailProduct(bookId),
+  }).send(res);
 };
+
 const deleteProduct = async (req, res) => {
   try {
     const bookId = req.params.id;

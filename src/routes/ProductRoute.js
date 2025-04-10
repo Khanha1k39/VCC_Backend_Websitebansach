@@ -16,7 +16,7 @@ router.post(
   productController.deleteManyProduct
 );
 
-router.get("/:id", productController.getDetailProduct);
+router.get("/:id", asyncHandler(productController.getDetailProduct));
 
 router.delete("/:id", authMiddleware, productController.deleteProduct);
 

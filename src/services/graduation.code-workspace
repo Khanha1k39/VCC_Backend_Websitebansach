@@ -1,0 +1,20 @@
+{
+  "folders": [
+	{
+		"path": "../../../../graduation"
+	},
+	{
+		"path": "../../../../graduationproject/message_queue_system"
+	},
+	{
+		"path": "../../.."
+	},
+	{
+		"path": "../.."
+	},
+	{
+		"path": "../../../../graduationproject/backend"
+	}
+],
+  "settings": {}
+}
